@@ -4,7 +4,8 @@ import M from 'materialize-css/dist/js/materialize.min.js';
 import "./../../assets/product_card.css"
 
 
-const DeleteModal = forwardRef(({ id, deleteProduct, parent }, ref,) => {
+const DeleteModal = forwardRef(({ name, deleteProduct }, ref,) => {
+
 	return (
 		<div ref={ref} id="modalDelete" className="modal ">
 			<div className="modal-content">
@@ -14,8 +15,8 @@ const DeleteModal = forwardRef(({ id, deleteProduct, parent }, ref,) => {
 						className="modal-close waves-effect red waves-red btn "
 						href="#modalDelete"
 						type="submit"
-						onClick={() => console.log(parent.current)}
-					// onClick={() => { deleteProduct(id) }}
+						onClick={() => console.log(name)}
+						onClick={() => { deleteProduct(name) }}
 					>
 						Delete
 					</button>
@@ -38,6 +39,7 @@ const ProductCard = ({
 	count,
 	imageUrl,
 	name,
+	DBname,
 	size,
 	weight,
 	deleteProduct
@@ -46,8 +48,6 @@ const ProductCard = ({
 	const linkProps = { pathname: `/product-info-page/${id}` }
 
 	const dialogModal = useRef(null)
-	const parent = useRef(null)
-
 
 	useEffect(() => {
 		//materialize init of modal window
@@ -61,22 +61,22 @@ const ProductCard = ({
 
 	return (
 		<>
-			<div ref={parent} className="card-panel-wrapper col s12 m6 l4 xl4" data-id={id} >
+			<div className="card-panel-wrapper col s12 m6 l4 xl4" data-id={id} >
 				<div className="card-panel  hoverable  ">
 					<div className="card-content">
 						<div className="card-image">
 							<img className="card-panel__image" src={imageUrl} alt={name} />
 							{/* <img height="230" src={imageUrl} alt={name} /> */}
 							<span className="card-title">{name}</span>
-						</div>{id}
+						</div>
 						<div className="card-panel-description">
-							<div>Count: {count}</div>
-							<div>Height: {size?.height}</div>
-							<div>Width: {size?.width}</div>
-							<div>Weight: {weight}</div>
+							<p>Count: {count}</p>
+							<p>Height: {size?.height}</p>
+							<p>Width: {size?.width}</p>
+							<p>Weight: {weight}</p>
 						</div>
 					</div>
-					<div className="card-action">
+					<div className="card-action__buttons">
 						<Link to={
 							linkProps
 						} className="btn waves-effect waves-light" >Reed more</Link>
@@ -86,9 +86,9 @@ const ProductCard = ({
 			</div>
 			<DeleteModal
 				id={id}
+				name={DBname}
 				deleteProduct={deleteProduct}
 				ref={dialogModal}
-				parent={parent}
 			/>
 		</>
 	);

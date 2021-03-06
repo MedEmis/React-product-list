@@ -2,10 +2,9 @@ import { forwardRef, useRef, useState } from "react";
 import { Field, Form } from "react-final-form";
 
 const CreateProduct = forwardRef(({ createNewProduct }, ref) => {
-	const [fields, setFields] = useState(["name", "imageUrl"])
-
-	const newField = useRef(null)
-
+	const requiredName = value => (value ? undefined : 'product name is required')
+	const requiredDB = value => (value ? undefined : 'DB name is required')
+	const requiredImage = value => (value ? undefined : 'image is required')
 
 	return (
 		<div ref={ref} id="modalCreate" className="modal">
@@ -14,24 +13,38 @@ const CreateProduct = forwardRef(({ createNewProduct }, ref) => {
 				<Form onSubmit={createNewProduct}>
 					{props => (
 						<form onSubmit={props.handleSubmit}>
-							<label htmlFor="name">{"name".toUpperCase()}
-								<Field
-									id="name"
-									name="name"
-									component="input"
-								/>
-							</label>
-							<label htmlFor="imageUrl">{"imageUrl".toUpperCase()}
-								<Field
-									id="imageUrl"
-									name="imageUrl"
-									component="input"
-								/>
-							</label>
+							<Field name="name" validate={requiredName}>
+								{({ input, meta }) => (
+									<div>
+										<label>{"Product name".toUpperCase()}</label>
+										<input {...input} type="text" />
+										{meta.error && meta.touched && <span style={{ color: "red" }}>{meta.error}</span>}
+									</div>
+								)}
+							</Field>
+							<Field name="DBname" validate={requiredDB}>
+								{({ input, meta }) => (
+									<div>
+										<label>{"Name to display in database".toUpperCase()}</label>
+										<input {...input} type="text" />
+										{meta.error && meta.touched && <span style={{ color: "red" }}>{meta.error}</span>}
+									</div>
+								)}
+							</Field>
+							<Field name="imageUrl" validate={requiredImage}>
+								{({ input, meta }) => (
+									<div>
+										<label>{"image Url".toUpperCase()}</label>
+										<input {...input} type="text" />
+										{meta.error && meta.touched && <span style={{ color: "red" }}>{meta.error}</span>}
+									</div>
+								)}
+							</Field>
 							<label htmlFor="count">{"count".toUpperCase()}
 								<Field
 									id="count"
 									name="count"
+									type="number"
 									component="input"
 								/>
 							</label>

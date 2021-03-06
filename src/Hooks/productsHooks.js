@@ -1,3 +1,6 @@
+import { deleteProducts, getProducts, updateProducts } from "../API"
+
+
 
 export const ACTIONS = {
 	REMOVE_POST: "REMOVE_POST",
@@ -23,18 +26,24 @@ const initialState = {
 export const productReducer = (state = initialState, action) => {
 	let currentProduct = null
 
+
 	switch (action.type) {
 		case ACTIONS.LOADING_ON:
+
 			return {
 				...state,
 				isLoading: true
 			}
+
 		case ACTIONS.LOADING_OFF:
+
 			return {
 				...state,
 				isLoading: false
 			}
+
 		case ACTIONS.UPDATE_PRODUCT_ITEM:
+
 			currentProduct = state.products.filter(product => product.id === action.payload.id)[0]
 			return {
 				...state,
@@ -47,31 +56,31 @@ export const productReducer = (state = initialState, action) => {
 					},
 				]
 			}
+
 		case ACTIONS.CREATE_PRODUCT:
-			console.log(action.payload)
 			return {
 				...state,
 				chosenProduct: null,
 				products: [
 					...state.products,
-					{
-						id: ++state.products.length + 1,
-						...action.payload.data,
-						comments: []
-					}
+					action.payload.newProduct
 				]
+
 			}
 		case ACTIONS.DELETE_PRODUCT:
-			console.log(action.payload)
-			return {
-				...state,
-				chosenProduct: null,
-				products: [
-					...state.products.filter(product => product.id !== action.payload.id),
-				]
+
+			if (action.payload) {
+				return {
+					...state,
+					chosenProduct: null,
+					products: [
+						...state.products.filter(product => product.DBname !== action.payload.name),
+					]
+				}
 			}
 		case ACTIONS.CREATE_COMMENT:
 			currentProduct = state.products.filter(product => product.id === action.payload.id)[0]
+
 			return {
 				...state,
 				chosenProduct: null,
@@ -81,18 +90,14 @@ export const productReducer = (state = initialState, action) => {
 						...currentProduct,
 						comments: [
 							...currentProduct.comments,
-							{
-								id: ++currentProduct.comments.length + 1,
-								productId: action.payload.id,
-								description: action.payload.data.comment,
-								date: action.payload.data.time
-							}
+							action.payload.comment
 						]
 					},
 				]
 			}
 		case ACTIONS.DELETE_COMMENT:
 			currentProduct = state.products.filter(product => product.id === action.payload.chosenProductId)[0]
+
 			return {
 				...state,
 				chosenProduct: null,
@@ -107,25 +112,38 @@ export const productReducer = (state = initialState, action) => {
 				]
 			}
 		case ACTIONS.GET_DATA:
+
 			return {
 				...state,
 				products: action.payload
 			}
+
 		case ACTIONS.GET_PRODUCT_ITEM:
+
 			return {
 				...state,
 				chosenProduct: state.products.find(item => item.id === action.payload)
 			}
+
 		case ACTIONS.SORT_PRODUCTS:
-			console.log(action.payload)
+
 			const key = action.payload.value
-			return {
-				...state,
-				products: state.products.sort((a, b) => a[key] > b[key] ? 1 : -1)
+			if (typeof key === "number") {
+				return {
+					...state,
+					products: state.products.sort((a, b) => a[key] > b[key] ? 1 : -1)
+				}
+			} else if (typeof key === "string") {
+				return {
+					...state,
+					products: state.products.sort((a, b) => a[key] > b[key] ? 1 : -1)
+				}
 			}
+
 		default:
 			return state
 	}
+
 
 
 }

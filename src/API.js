@@ -1,41 +1,80 @@
-// import * as axios from "axios"
-import dataBase from './db.json'
+import firebase from './firebaseConfig';
+
+const db = firebase.firestore()
+
+const collection = db.collection("products")
 
 
-// const URL_storage = {
-// 	firebase: "",
-// 	jsonPlaceholderRemote: "https://my-json-server.typicode.com/MedEmis/small_projects_collections/",
-// 	jsonPlaceholderLocal: "http://localhost:4000/"
-// }
+export const getProducts = async () => {
 
-// const axiosInstance = axios.create({
-// 	baseURL: URL_storage.jsonPlaceholderRemote,
-// 	headers: { "Content-Type": "application/json" }
-// })
-
-// const axiosDBlocalhost = axios.create({
-// 	baseURL: URL_storage.jsonPlaceholderLocal,
-// 	headers: { "Content-Type": "application/json" }
-// })
-
-// const URL_path = {
-// 	posts: `posts`,
-// 	comments: `comments`,
-// 	todos: `todos`
-// }
-
-// export const API = {
-// 	getPosts: async () => await axiosInstance.get(URL_path.posts).then(res => res),
-// 	getComments: async () => await axiosInstance.get(URL_path.comments).then(res => res),
-// 	getToDos: async () => await axiosInstance.get(URL_path.todos).then(res => res),
-// 	setToDos: async (time, date, event) => await axiosInstance.post(URL_path.todos, { time, date, event }).then(res => res),
-// 	deleteToDos: async (id) => await axiosInstance.delete(`${URL_path.todos}/${id}`).then(res => res),
-// }
-
-
-
-export const readJson = () => {
-
-	return dataBase
+	try {
+		const data = await collection.get()
+		const products = []
+		data.forEach(doc => products.push(doc.data()))
+		if (products.length) {
+			localStorage.setItem("products", JSON.stringify(products))
+		} else {
+			console.log("No data!")
+		}
+	} catch (error) {
+		console.log(error)
+	}
 }
+
+export const updateProducts = (product) => {
+
+
+	try {
+		collection.doc(product.DBname).set(product)
+	} catch (error) {
+		console.log(error)
+	}
+
+}
+export const deleteProducts = async (name) => {
+
+	try {
+		await collection.doc(name).delete()
+	} catch (error) {
+		console.log(error)
+	}
+
+}
+
+export const createProducts = async (product) => {
+
+	try {
+		const name = product.name
+		await collection.add({ [name]: product })
+	} catch (error) {
+		console.log(error)
+	}
+
+}
+
+export const createProductsComment = async (name, comment) => {
+
+	try {
+		await collection.doc(name).update({
+			"comments": firebase.firestore.FieldValue.arrayUnion(comment),
+		});
+	} catch (error) {
+		console.log(error)
+	}
+
+}
+
+export const deleteProductsComment = async (name, comment) => {
+
+	try {
+		await collection.doc(name).update({
+			"comments": firebase.firestore.FieldValue.arrayRemove(comment)
+		});
+	} catch (error) {
+		console.log(error)
+	}
+
+}
+
+
 

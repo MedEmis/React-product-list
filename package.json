@@ -1,12 +1,14 @@
 {
   "name": "react-test-shop",
   "version": "0.1.0",
-  "private": true,
+  "homepage": "https://react-product-list.vercel.app/",
+  "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.1",
     "final-form": "^4.20.1",
+    "firebase": "^8.2.10",
     "materialize-css": "^1.0.0-rc.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -38,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "firestore-export-import": "^0.12.1"
   }
 }

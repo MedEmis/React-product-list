@@ -11,7 +11,7 @@ const ProductPage = ({
 	deleteComment,
 	match }) => {
 
-	const id = +match.params.id
+	const id = match.params.id
 
 	useEffect(() => {
 		if (!chosenProduct || id !== chosenProduct.id) {

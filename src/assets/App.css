@@ -6,6 +6,7 @@
 	justify-content: center;
 	font-size: calc(10px + 2vmin);
 	color: rgb(0, 0, 0);
+	padding-bottom: 20px;
 }
 
 .App-link {
@@ -16,7 +17,39 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	padding: 5px !important ;
+	margin: 0px !important ;
+	font-size: 20px;
+	position: relative;
 }
+
+.product-info-field__item {
+}
+
+.product-info-field__item_name {
+	flex: 0 0 40%;
+	border: none !important;
+	text-align: left;
+	padding: 5px !important ;
+	text-overflow: ellipsis !important;
+	overflow: hidden !important;
+}
+
+.product-info-field__item_value {
+	flex: 0 0 60%;
+	padding: 5px !important ;
+	text-align: left;
+	text-overflow: ellipsis !important;
+	word-break: break-all;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+}
+
+.product-info-btn {
+	margin: 0 !important;
+	width: 100%;
+}
+
 .product-info-image {
 	max-width: 600px;
 	max-height: 500px;

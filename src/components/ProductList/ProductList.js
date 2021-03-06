@@ -5,7 +5,6 @@ const ProductCard = lazy(() => import('./ProductCard'));
 
 const ProductList = ({ getData, createProduct, deleteProduct, products, productsSort }) => {
 
-
 	//links to modal windows
 	const productModal = useRef()
 
@@ -19,8 +18,7 @@ const ProductList = ({ getData, createProduct, deleteProduct, products, products
 			edge: 'left'
 		})
 
-	}, [getData,])
-
+	}, [])
 	return (
 		<>
 			<div>Products List</div>
@@ -39,11 +37,12 @@ const ProductList = ({ getData, createProduct, deleteProduct, products, products
 								count={item.count}
 								imageUrl={item.imageUrl}
 								name={item.name}
+								DBname={item.DBname}
 								size={item.size}
 								weight={item.weight}
 								deleteProduct={deleteProduct}
 							/>)
-							: null
+							: <div>No Products</div>
 					}
 				</Suspense>
 			</div>

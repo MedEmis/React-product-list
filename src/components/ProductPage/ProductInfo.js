@@ -5,6 +5,12 @@ import CommentModal from './ModalComment';
 
 
 const Comment = ({ date, description, deleteComment, id, productId }) => {
+	const comment = {
+		id: id,
+		productId: productId,
+		description: description,
+		date: date
+	}
 	return (
 		<div className="card light-blue darken-3">
 			<div className="card-content white-text">
@@ -12,7 +18,7 @@ const Comment = ({ date, description, deleteComment, id, productId }) => {
 			</div>
 			<div className="card-action white-text comment-items">
 				<span className="">Date: {date}</span>
-				<button className="waves-effect waves-light btn " onClick={() => deleteComment(id)}>Delete</button>
+				<button className="waves-effect waves-light btn " onClick={() => deleteComment(comment)}>Delete</button>
 			</div>
 		</div>
 	)
@@ -21,12 +27,13 @@ const Comment = ({ date, description, deleteComment, id, productId }) => {
 const DescriptionField = ({ type, value }) => {
 	return (
 		<li key={type} className="collection-item product-info-field">
-			<span>{type.toUpperCase()}</span>
-			<span>{
+			<div className="collection-item product-info-field__item_name">{type.toUpperCase()}</div>
+			<div className="collection-item product-info-field__item_value">{
 				typeof value === "object" ?
-					Object.keys(value).map(subField => <p key={subField}>{subField}: {value[subField]}</p>)
+					// subfields  
+					Object.keys(value).map(subField => <p key={subField}>{subField.toUpperCase()}: {value[subField]}</p>)
 					: value
-			}</span>
+			}</div>
 		</li>
 	)
 }
@@ -54,12 +61,14 @@ const ProductInfo = ({
 	const editModal = useRef(null)
 	const commentModal = useRef(null)
 
-	const onSubmit = (data) => updateProduct(data, +chosenProduct.id)
+	const DBname = chosenProduct.DBname
+
+	const onSubmit = (data) => updateProduct({ ...data, DBname }, chosenProduct.id)
+
 	const createNewComment = (message) => createComment({
 		comment: message.comment,
 		time: `${time} ${today}`
 	}, chosenProduct.id)
-	const deleteComm = (commentId) => deleteComment(+chosenProduct.id, commentId)
 
 
 	useEffect(() => {
@@ -86,13 +95,16 @@ const ProductInfo = ({
 				<div className="col s12 m6 ">
 					<ul className="collection">
 						{
-							Object.keys(chosenProduct).filter(key => (key !== "comments" && key !== "imageUrl")).map((field, index) => <DescriptionField
-								key={index}
-								type={field}
-								value={chosenProduct[field]}
-							/>)
+							Object.keys(chosenProduct)
+								//hide some fields
+								.filter(key => (key !== "comments" && key !== "imageUrl" && key !== "DBname"))
+								.map((field, index) => <DescriptionField
+									key={index}
+									type={field}
+									value={chosenProduct[field]}
+								/>)
 						}
-						<button className="waves-effect waves-light btn modal-trigger right" href="#modal1">
+						<button className="waves-effect waves-light btn fluid product-info-btn modal-trigger right" href="#modal1">
 							Edit
 						</button>
 					</ul>
@@ -101,14 +113,14 @@ const ProductInfo = ({
 			<div className="row">
 				<div className="col s12">
 					{
-						chosenProduct.comments.map(comment =>
+						chosenProduct.comments.filter(item => item !== undefined).map(comment =>
 							<Comment
 								key={comment.id}
 								date={comment.date}
 								description={comment.description}
 								id={comment.id}
 								productId={comment.productId}
-								deleteComment={deleteComm}
+								deleteComment={deleteComment}
 							/>)
 					}
 				</div>
